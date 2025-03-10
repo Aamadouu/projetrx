@@ -1,0 +1,106 @@
+Prérequis : installer GNS3, Docker (linux et Windows)
+Linux : apt install docker.io (a importe 3745)
+Windows : docker dekstop
+
+Protocole d'accès a distance RDP 
+SSH permet l'accès a distant par interface graphique et RDP
+affiche la machine en elle meme on peut voir le bureau tel qu'il est.
+
+1) Il faut activer le service RDP sur Windows et pour cela on va dans : 
+système -> bureau d'assistance -> activer.
+
+2) Ajouter les utilisateurs autorisés a se connecter au niveau du serveur.
+compte utilisateur -> ajouter
+
+on va utiliser un client RDP pour pouvoir y accéder.
+On tape sur la barre de recherche RDP et on entre l'adresse IPduServeur
+
+Linux :
+télécharger le client "remmina" (apt install remmina)
+
+XRDP entre Windows et Linux
+VNC/NoVNC 
+en créant des tunnels on renforce la sécurité
+
+xfc4 et xfc4-goodies ce sont des paquet qui permettent de gerer la connexion a l'environnement de bureau a distance.
+Le paquet tightvncserver
+
+Service de bon fonctionnement
+1.DHCP
+2.DNS
+3.TFTP
+
+Protocole TFTP:
+Fonctionnement: 
+client/serveur
+Paquets: (Client : tftp-hpa atft; Serveur : tftp-hpa atftd)
+
+
+Cas d'utilisation : 
+1.Transfert de fichier
+2. Sauvegarder de fichiers de configuration des SE (Routeurs, Switch..)
+Mise en place du serveur TFTP et test
+
+installer les paquets: tftpd-hpa
+puis éditer le fichier tftpd-hpa qui e trouve dans /etc.default et ajouter les informations suivantes :
+TFTP ADDRESS:"@IP:69"
+on peut grader le dossier /srv/tftp mais si on veut on peut le changer. 
+>TFTP_USERNAME : L'utilisateur sous lequel le service s'exécute. Par défaut, c'est tftp.
+>TFTP_DIRECTORY : Le répertoire de base pour les fichiers TFTP. Assurez-vous qu'il existe et que les permissions sont correctement définies.
+>TFTP_ADDRESS : Adresse IP et port (69 par défaut).
+>TFTP_OPTIONS : Inclut --secure (pour limiter les accès au répertoire défini) et -c (pour permettre la création de fichiers).
+
+Cependant si n modifie il faut lui donner les droit nécessaire.
+options --secure -c
+démarrer les services : systemctl restart tftpd-hpa
+			systemectl tftpd-hpa status
+puis voir si le port est ouvert : netstat -anp|grep -w 69
+
+Se déplacer  au niveau du répertoire /srv/tftp et creer un fichier du nom glsib.txt
+
+sur un autre terminal se connecter sur le serveur par la commande : tftp @IPServeur
+get glsib.txt
+
+
+A FAIRE AVANT PROCHAIN COURS RX:
+1.Installer GNS3 sur Windows (Importer le routeur 3745 ipvoice)
+Importer la machine virtuelle ou on a installer le serveur TFTP est installer.
+2.Telecharger au niveau du site officiel de iRedMail (qui vas de paire avec les services de messagerie de DST2 et on va utiliser NGINX).
+
+La transmission par rapport a la messagerie instantanée ne nécessite pas d'etre différer.
+Support multimédia c'est a dire que l'on peut ajouter des piece jointe.
+
+
+Plusieurs type de messagerie :
+electronique (email (gmail outlook roundcube)) instantanée(wtspp teams) unifié(mess vocal, fax) et collaborative comme gmail qui integre les outils de travails collaboratif(calendar, gdt)
+
+
+Client de messagerie 
+MUA Mail User Agent => lire rediger et send mess
+
+Serveur de messagerie
+MTA Mail Transfert Agent	necessite dovecot
+MDA Mail Delivery Agent         	  
+
+Protocoles
+SMTP pour l'envoi 		necessite postfix
+Simple Mail Transfert Protocol 
+pour une communication non securisé port 25 
+pour une communication securisé port 994
+
+POP IMAP pour la reception
+MTA+MDA
+- Post Office Protocole
+pour une communication non securisé 110
+pour une communication securisé 995
+- Internet Mail Access Protocol
+pour une communication non securisé 143
+pour une communication securisé 993
+
+Boites à lettres espaces ou les messages sont stockés
+Les formats de boites a lettre
+-format mailbox on a un fichier ou stockes l'ensemble des fichiers qui vont arriver 
+-format maildir on a un dossier
+
+iredmail = solution opensource permet d'installer rapidement et facilement des messageries
+
